@@ -7,6 +7,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { Image } from 'react-bootstrap';
+import miImagen from "../../assets/horse.png";
+
+
 
 const categoryOfSpecimens = {
   "Caballos": ["Caballo 1", "Caballo 2", "Caballo 3"],
@@ -290,14 +294,19 @@ const HorseTrackingWithScheduler = () => {
   return (
 <div style={{padding: 16}}>
 <Row>
-<ListGroup className="mb-4">
-      <ListGroup.Item>Cras justo odio</ListGroup.Item>
-      <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-      <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-      <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-      <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-    </ListGroup>
-</Row>
+        <Col xs={6} md={4}>
+          <Image src="miImagen" thumbnail className="mb-0"/>
+        </Col>
+        <Col xs={12} md={8}>
+          <ListGroup className="mb-4">
+            <ListGroup.Item>Cras justo odio</ListGroup.Item>
+            <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
+            <ListGroup.Item>Morbi leo risus</ListGroup.Item>
+            <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
+            <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+          </ListGroup>
+        </Col>
+      </Row>
 <Row className="mb-3">
         <Col sm="4" className="text-center">
           <button 
