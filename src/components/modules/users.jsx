@@ -7,8 +7,8 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 // Datos iniciales de usuarios
 const data = [
-  { id: 1, NombreCompleto: "Lionel Messi", Correo: "messi@gmail.com", Celular: 3005242585, Rol: "palafrenero", estado: true, Clave: 1234, Usuario: "lmessi" },
-  { id: 2, NombreCompleto: "Keimer Lezcano", Correo: "keimer@gmail.com", Celular: 3000000000, Rol: "veterinario", estado: true, Clave: 5678, Usuario: "klezcano" },
+  { id: 1, NombreCompleto: "Lionel Messi", Correo: "messi@gmail.com", Celular: 3005242585, Rol: "palafrenero", estado: true, Clave: "1234", Usuario: "lmessi" },
+  { id: 2, NombreCompleto: "Keimer Lezcano", Correo: "keimer@gmail.com", Celular: 3000000000, Rol: "veterinario", estado: true, Clave: "5678", Usuario: "klezcano" },
 ];
 
 // Lista de roles disponibles para seleccionar
@@ -202,10 +202,28 @@ class Usuarios extends React.Component {
   }
 
   cambiarEstado = (id) => {
-    const lista = this.state.data.map(registro =>
-      registro.id === id ? { ...registro, estado: !registro.estado } : registro
-    );
-    this.setState({ data: lista, filteredData: lista });
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `¿Realmente deseas ${this.state.data.find(user => user.id === id).estado ? 'desactivar' : 'activar'} este usuario?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, continuar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const lista = this.state.data.map(registro =>
+          registro.id === id ? { ...registro, estado: !registro.estado } : registro
+        );
+        this.setState({ data: lista, filteredData: lista });
+        Swal.fire(
+          'Actualizado',
+          `Usuario ${this.state.data.find(user => user.id === id).estado ? 'desactivado' : 'activado'} con éxito.`,
+          'success'
+        );
+      }
+    });
   }
 
   render() {
@@ -235,7 +253,7 @@ class Usuarios extends React.Component {
                 <th>Celular</th>
                 <th>Rol</th>
                 <th>Estado</th>
-                <th>Clave</th> {/* Añadido */}
+                <th>Clave</th>
                 <th>Usuario</th>
                 <th>Acciones</th>
               </tr>
@@ -249,7 +267,7 @@ class Usuarios extends React.Component {
                   <td>{elemento.Celular}</td>
                   <td>{elemento.Rol}</td>
                   <td>{elemento.estado ? "Activo" : "Inactivo"}</td>
-                  <td>{elemento.Clave}</td> {/* Añadido */}
+                  <td>{elemento.Clave}</td> {/* Muestra la clave sin encriptar */}
                   <td>{elemento.Usuario}</td>
                   <td>
                     <ButtonGroup>
@@ -279,7 +297,7 @@ class Usuarios extends React.Component {
                     </ButtonGroup>
                   </td>
                 </tr>
-              ))}
+              ))} 
             </tbody>
           </Table>
         </Container>
@@ -290,72 +308,40 @@ class Usuarios extends React.Component {
           <ModalBody>
             <FormGroup>
               <label>Nombre Completo</label>
-              <Input
-                type="text"
-                name="NombreCompleto"
-                value={form.NombreCompleto}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.NombreCompleto}
-              />
-              <div className="invalid-feedback">{validationErrors.NombreCompleto}</div>
+              <Input type="text" name="NombreCompleto" value={form.NombreCompleto} onChange={this.handleChange} />
+              {validationErrors.NombreCompleto && <small className="text-danger">{validationErrors.NombreCompleto}</small>}
             </FormGroup>
             <FormGroup>
               <label>Correo</label>
-              <Input
-                type="email"
-                name="Correo"
-                value={form.Correo}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Correo || !!emailError}
-              />
-              <div className="invalid-feedback">{validationErrors.Correo || emailError}</div>
+              <Input type="text" name="Correo" value={form.Correo} onChange={this.handleChange} />
+              {emailError && <small className="text-danger">{emailError}</small>}
             </FormGroup>
             <FormGroup>
               <label>Celular</label>
-              <Input
-                type="number"
-                name="Celular"
-                value={form.Celular}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Celular}
-              />
-              <div className="invalid-feedback">{validationErrors.Celular}</div>
+              <Input type="number" name="Celular" value={form.Celular} onChange={this.handleChange} />
+              {validationErrors.Celular && <small className="text-danger">{validationErrors.Celular}</small>}
             </FormGroup>
             <FormGroup>
               <label>Rol</label>
-              <Input
-                type="select"
-                name="Rol"
-                value={form.Rol}
-                onChange={this.handleChange}
-              >
-                <option value="">Seleccionar rol</option>
-                {roles.map((rol, index) => (
-                  <option key={index} value={rol}>{rol}</option>
-                ))}
+              <Input type="select" name="Rol" value={form.Rol} onChange={this.handleChange}>
+                <option value="">Seleccione un rol</option>
+                {roles.map((rol, index) => <option key={index} value={rol}>{rol}</option>)}
               </Input>
+              {validationErrors.Rol && <small className="text-danger">{validationErrors.Rol}</small>}
+            </FormGroup>
+            <FormGroup>
+              <label>Estado</label>
+              <Input type="checkbox" name="estado" checked={form.estado} onChange={this.handleChange} />
             </FormGroup>
             <FormGroup>
               <label>Clave</label>
-              <Input
-                type="password"
-                name="Clave"
-                value={form.Clave}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Clave || !!claveError}
-              />
-              <div className="invalid-feedback">{validationErrors.Clave || claveError}</div>
+              <Input type="text" name="Clave" value={form.Clave} onChange={this.handleChange} />
+              {claveError && <small className="text-danger">{claveError}</small>}
             </FormGroup>
             <FormGroup>
               <label>Usuario</label>
-              <Input
-                type="text"
-                name="Usuario"
-                value={form.Usuario}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Usuario || !!usuarioError}
-              />
-              <div className="invalid-feedback">{validationErrors.Usuario || usuarioError}</div>
+              <Input type="text" name="Usuario" value={form.Usuario} onChange={this.handleChange} />
+              {usuarioError && <small className="text-danger">{usuarioError}</small>}
             </FormGroup>
           </ModalBody>
           <ModalFooter>
@@ -370,72 +356,40 @@ class Usuarios extends React.Component {
           <ModalBody>
             <FormGroup>
               <label>Nombre Completo</label>
-              <Input
-                type="text"
-                name="NombreCompleto"
-                value={form.NombreCompleto}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.NombreCompleto}
-              />
-              <div className="invalid-feedback">{validationErrors.NombreCompleto}</div>
+              <Input type="text" name="NombreCompleto" value={form.NombreCompleto} onChange={this.handleChange} />
+              {validationErrors.NombreCompleto && <small className="text-danger">{validationErrors.NombreCompleto}</small>}
             </FormGroup>
             <FormGroup>
               <label>Correo</label>
-              <Input
-                type="email"
-                name="Correo"
-                value={form.Correo}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Correo || !!emailError}
-              />
-              <div className="invalid-feedback">{validationErrors.Correo || emailError}</div>
+              <Input type="text" name="Correo" value={form.Correo} onChange={this.handleChange} />
+              {emailError && <small className="text-danger">{emailError}</small>}
             </FormGroup>
             <FormGroup>
               <label>Celular</label>
-              <Input
-                type="number"
-                name="Celular"
-                value={form.Celular}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Celular}
-              />
-              <div className="invalid-feedback">{validationErrors.Celular}</div>
+              <Input type="number" name="Celular" value={form.Celular} onChange={this.handleChange} />
+              {validationErrors.Celular && <small className="text-danger">{validationErrors.Celular}</small>}
             </FormGroup>
             <FormGroup>
               <label>Rol</label>
-              <Input
-                type="select"
-                name="Rol"
-                value={form.Rol}
-                onChange={this.handleChange}
-              >
-                <option value="">Seleccionar rol</option>
-                {roles.map((rol, index) => (
-                  <option key={index} value={rol}>{rol}</option>
-                ))}
+              <Input type="select" name="Rol" value={form.Rol} onChange={this.handleChange}>
+                <option value="">Seleccione un rol</option>
+                {roles.map((rol, index) => <option key={index} value={rol}>{rol}</option>)}
               </Input>
+              {validationErrors.Rol && <small className="text-danger">{validationErrors.Rol}</small>}
+            </FormGroup>
+            <FormGroup>
+              <label>Estado</label>
+              <Input type="checkbox" name="estado" checked={form.estado} onChange={this.handleChange} />
             </FormGroup>
             <FormGroup>
               <label>Clave</label>
-              <Input
-                type="password"
-                name="Clave"
-                value={form.Clave}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Clave || !!claveError}
-              />
-              <div className="invalid-feedback">{validationErrors.Clave || claveError}</div>
+              <Input type="text" name="Clave" value={form.Clave} onChange={this.handleChange} />
+              {claveError && <small className="text-danger">{claveError}</small>}
             </FormGroup>
             <FormGroup>
               <label>Usuario</label>
-              <Input
-                type="text"
-                name="Usuario"
-                value={form.Usuario}
-                onChange={this.handleChange}
-                invalid={!!validationErrors.Usuario || !!usuarioError}
-              />
-              <div className="invalid-feedback">{validationErrors.Usuario || usuarioError}</div>
+              <Input type="text" name="Usuario" value={form.Usuario} onChange={this.handleChange} />
+              {usuarioError && <small className="text-danger">{usuarioError}</small>}
             </FormGroup>
           </ModalBody>
           <ModalFooter>
