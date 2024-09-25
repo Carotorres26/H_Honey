@@ -299,11 +299,11 @@ const HorseTrackingWithScheduler = () => {
         </Col>
         <Col xs={12} md={8}>
           <ListGroup className="mb-4">
-            <ListGroup.Item>Cras justo odio</ListGroup.Item>
-            <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-            <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-            <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-            <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+            <ListGroup.Item><b>Nombre: </b>Don Juan</ListGroup.Item>
+            <ListGroup.Item><b>Edad: </b>3 años</ListGroup.Item>
+            <ListGroup.Item><b>Peso: </b>422 KG</ListGroup.Item>
+            <ListGroup.Item><b>Andar: </b>P4</ListGroup.Item>
+            <ListGroup.Item><b>Fin: </b>competencia</ListGroup.Item>
           </ListGroup>
         </Col>
       </Row>
